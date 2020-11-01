@@ -1,0 +1,103 @@
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <algorithm>
+#include <random>
+#include <utility>
+#include <ctime>
+
+class Individual {
+
+public:
+    double x, y;
+    double FIT;
+};
+
+std::vector<Individual> Population;
+
+double FIT_Function(double x, double y) {
+    return exp((-x) * x) * exp((-y) * y) / (1 + x * x + y * y);
+}
+
+double average_value(const std::vector<Individual>& pop) {
+    double res = 0.;
+    for (const auto& i : pop) {
+        res = res + i.FIT;
+    }
+    return res / 4;
+}
+
+bool Comparison_Individual(const Individual& i1, const Individual& i2) {
+    return i1.FIT > i2.FIT;
+};
+
+void Table(const std::vector<Individual>& pop, size_t it) {
+    std::cout << "-----------------------------------------------------------------------" << std::endl;
+    std::cout << "N: " << it << ")  " << "| Middle_value: " << average_value(pop) << "| Max_value: " << pop[0].FIT << std::endl;
+    std::cout << "-----------------------------------------------------------------------" << std::endl;
+    for (const auto& i : pop) {
+        std::cout << "| x: " << i.x << "| y: " << i.y << "| FIT: " << i.FIT << std::endl;
+        std::cout << "-----------------------------------------------------------------------" << std::endl;
+    }
+}
+
+int main(int argc, const char* argv[]) {
+    Population.resize(4);
+    std::random_device random;
+    std::mt19937 gen(random());
+    std::uniform_real_distribution<double> distance(-2.2, 2.2);
+    std::uniform_real_distribution<double> distance_z(0, 1);
+    double r_mut = 0.05;
+    int N = 100;
+
+    for (auto i = 0; i < Population.size(); i++) {
+        Individual individ;
+        individ.x = distance(gen);
+        individ.y = distance(gen);
+        individ.FIT = FIT_Function(individ.x, individ.y);
+        Population[i] = individ;
+    }
+
+    std::sort(Population.begin(), Population.end(), Comparison_Individual);
+    Table(Population, 0);
+    for (auto i = 1; i <=N; i++) {
+        for (auto j = 0; j < Population.size(); j++) {
+            auto r = distance_z(gen);
+            if (r < r_mut) {
+                Population[j].x = distance(gen);
+                Population[j].y = distance(gen);
+                Population[j].FIT = FIT_Function(Population[j].x, Population[j].y);
+            }
+        }
+        std::sort(Population.begin(), Population.end(), Comparison_Individual);
+        std::vector<Individual> new_population;
+        new_population.resize(4);
+        size_t tail;
+        if (Population[0].FIT != Population[1].FIT) {
+            tail = 1;
+        }
+        else {
+            tail = 2;
+        }
+        new_population[0].x = Population[0].x;
+        new_population[0].y = Population[tail].y;
+        new_population[0].FIT = FIT_Function(new_population[0].x, new_population[0].y);
+
+        new_population[1].x = Population[tail].x;
+        new_population[1].y = Population[0].y;
+        new_population[1].FIT = FIT_Function(new_population[1].x, new_population[1].y);
+
+        new_population[2].x = Population[0].x;
+        new_population[2].y = Population[tail + 1].y;
+        new_population[2].FIT = FIT_Function(new_population[2].x, new_population[2].y);
+
+        new_population[3].x = Population[tail + 1].x;
+        new_population[3].y = Population[0].y;
+        new_population[3].FIT = FIT_Function(new_population[3].x, new_population[3].y);
+
+        std::sort(new_population.begin(), new_population.end(), Comparison_Individual);
+        Population = new_population;
+        Table(Population, i);
+    }
+    return 0;
+}
