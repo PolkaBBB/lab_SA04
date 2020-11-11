@@ -7,7 +7,7 @@
 ![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/function_turned.PNG)
 
 
-Подробные данные популяций для N = 0 .. 9
+//Подробные данные популяций для N = 0 .. 9
 
 
 | №  поколения  | X          | Y         | FIT      | Максмимальный  результат | Средний  результат |
