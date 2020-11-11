@@ -16,7 +16,7 @@ public:
 std::vector<Individual> Population;
 
 double FIT_Function(double x, double y) {
-    return exp((-x) * x) * exp((-y) * y) / (1 + x * x + y * y);
+    return 1 / (1 + pow(x, 2) + pow(y, 2));
 }
 
 double average_value(const std::vector<Individual>& pop) {
@@ -24,7 +24,7 @@ double average_value(const std::vector<Individual>& pop) {
     for (const auto& i : pop) {
         res = res + i.FIT;
     }
-    return res / 4;
+    return res / 6;
 }
 
 bool Comparison_Individual(const Individual& i1, const Individual& i2) {
@@ -42,12 +42,12 @@ void Table(const std::vector<Individual>& pop, size_t it) {
 }
 
 int main(int argc, const char* argv[]) {
-    Population.resize(4);
+    Population.resize(6);
     std::random_device random;
     std::mt19937 gen(random());
     std::uniform_real_distribution<double> distance(-2.2, 2.2);
-    std::uniform_real_distribution<double> distance_z(0, 1);
-    double r_mut = 0.05;
+    std::uniform_real_distribution<double> dis(0, 1);
+    double percent_mut = 0.25;
     int N = 100;
 
     for (auto i = 0; i < Population.size(); i++) {
@@ -62,8 +62,8 @@ int main(int argc, const char* argv[]) {
     Table(Population, 0);
     for (auto i = 1; i <=N; i++) {
         for (auto j = 0; j < Population.size(); j++) {
-            auto r = distance_z(gen);
-            if (r < r_mut) {
+            auto r = dis(gen);
+            if (r < percent_mut) {
                 Population[j].x = distance(gen);
                 Population[j].y = distance(gen);
                 Population[j].FIT = FIT_Function(Population[j].x, Population[j].y);
@@ -71,7 +71,7 @@ int main(int argc, const char* argv[]) {
         }
         std::sort(Population.begin(), Population.end(), Comparison_Individual);
         std::vector<Individual> new_population;
-        new_population.resize(4);
+        new_population.resize(6);
         size_t tail;
         if (Population[0].FIT != Population[1].FIT) {
             tail = 1;
@@ -94,6 +94,14 @@ int main(int argc, const char* argv[]) {
         new_population[3].x = Population[tail + 1].x;
         new_population[3].y = Population[0].y;
         new_population[3].FIT = FIT_Function(new_population[3].x, new_population[3].y);
+
+        new_population[4].x = Population[tail + 1].x;
+        new_population[4].y = Population[0].y;
+        new_population[4].FIT = FIT_Function(new_population[4].x, new_population[4].y);
+
+        new_population[5].x = Population[tail + 1].x;
+        new_population[5].y = Population[0].y;
+        new_population[5].FIT = FIT_Function(new_population[5].x, new_population[5].y);
 
         std::sort(new_population.begin(), new_population.end(), Comparison_Individual);
         Population = new_population;
