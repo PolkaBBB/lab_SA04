@@ -1,7 +1,10 @@
 # lab_SA04
 
-![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/img1.PNG)
-![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/img2.PNG)
+![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/screenshot_1.PNG)
+![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/screenshot_2.PNG)
+![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/result_of_program.PNG)
+![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/function.PNG)
+![alt text](https://github.com/PolkaBBB/Lab_SA04/blob/master/function_turned.PNG)
 
 
 Подробные данные популяций для N = 0 .. 9
